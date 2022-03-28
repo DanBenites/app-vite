@@ -7,9 +7,11 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'https://curso-vue-61741-default-rtdb.firebaseio.com/' })
 
-api.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+const api = axios.create({ baseURL: 'https://api.openweathermap.org/data/2.5/forecast?q=Dourados&units=metric&lang=pt_br&appid=a4c7ce7d14ee7e65f0c6fc1e3a53b703' })
+// const api = axios.create({ baseURL: 'https://api.openweathermap.org/data/2.5/weather?q=Dourados&appid=a4c7ce7d14ee7e65f0c6fc1e3a53b703' })
+
+// https://api.openweathermap.org/data/2.5/weather?q=Dourados&appid=a4c7ce7d14ee7e65f0c6fc1e3a53b703
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
