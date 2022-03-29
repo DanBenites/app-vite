@@ -1,18 +1,20 @@
 <template>
   <q-page>
       <div class="cidade" >
-        <p class="city">{{ city.name }}</p>
-        <span> lat: {{ city.lat }} - lon: {{ city.lon }}  </span>
+        <p class="city">{{ atual.name }}</p>
+        <span> lat: {{ atual.lat }} - lon: {{ atual.lon }}  </span>
       </div>
-    <!-- <br>
+    <br>
     <q-card class="temp-atual transparent">
       <q-card-section >
-        <q-img :src="urlIcon[0]" style="height: 100px ; max-width: 100px"/>
-             {{ atual.temp }} °K
+        <q-img :src="atual.icon" style="height: 100px ; max-width: 100px"/>
+             {{ atual.temp }} °C
         <p class="descricao-t"> {{ atual.descricao }}</p>
       </q-card-section>
     </q-card>
     <br>
+    <card-tree-days/>
+    <!--
     <q-card>
        <q-item clickable>
           <q-item-section avatar>
@@ -58,6 +60,8 @@
 <script>
 
 import { defineComponent } from 'vue'
+import axios from 'axios'
+import CardTreeDays from './CardTreeDays.vue'
 // import CardDatasMain from './CardDatasMain.vue'
 
 // import TableScrollVirtual from './TableScrollVirtual.vue'
@@ -68,33 +72,44 @@ export default defineComponent({
   data () {
     return {
       lista: [],
-      city: {
+      atual: {
         name: '',
         lat: '',
-        lon: ''
+        lon: '',
+        temp: '',
+        descricao: '',
+        icon: ''
 
       }
 
     }
   },
   components: {
+    CardTreeDays
     // TableScrollVirtual,
     // CardDatasMain
   },
   mounted () {
-    this.getApi()
+    this.getApiRealTime()
   },
   methods: {
-    getApi () {
-      this.$api.get()
+    getApiRealTime () {
+      axios
+        .get('https://api.openweathermap.org/data/2.5/weather?q=Dourados&units=metric&lang=pt_br&appid=a4c7ce7d14ee7e65f0c6fc1e3a53b703')
         .then((res) => {
           this.lista = res.data
-          this.city.name = this.lista.city.name
-          this.city.lat = this.lista.city.coord.lat
-          this.city.lon = this.lista.city.coord.lon
+          this.atual.name = this.lista.name
+          this.atual.lat = this.lista.coord.lat
+          this.atual.lon = this.lista.coord.lon
+          this.atual.temp = this.lista.main.temp
+          this.atual.icon = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${this.lista.weather[0].icon}.png`
+          this.atual.descricao = this.lista.weather[0].description.toUpperCase()
         })
-        .catch((err) => { console.log(err) })
+        .catch((error) => {
+          console.log(error)
+        })
     }
+
   }
 
 })
