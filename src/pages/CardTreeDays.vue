@@ -1,6 +1,6 @@
 <template>
 <q-page>
-  <q-card>
+  <q-card id='dias'>
        <q-item clickable>
           <q-item-section avatar>
             <q-img :src="atual.icon"/>
@@ -9,7 +9,7 @@
           <q-item-section>
             <q-item-label> Hoje • {{ atual.descricao}}</q-item-label>
           </q-item-section>
-        <q-item-section side>↑ {{getDays()}} °C </q-item-section>
+        <q-item-section side>↑ {{ teste[0].tempMax }}°C </q-item-section>
         </q-item>
 
         <!--
@@ -39,12 +39,14 @@
 </template>
 
 <script>
-
+import { toRaw } from 'vue'
 import axios from 'axios'
+
 export default {
+  el: '#dias',
   data () {
     return {
-
+      teste: '',
       lista: [],
       dados: [],
       atual: {
@@ -103,17 +105,10 @@ export default {
             menor = 600
           }
         }
-        console.log(this.days)
       })
-    },
-    getDays () {
-      console.log(this.days[0])
-      if (this.days) {
-        return this.days[0].tempMax
-      } else { return 0 }
+      this.teste = toRaw(this.days)
     }
   }
-
 }
 </script>
 
