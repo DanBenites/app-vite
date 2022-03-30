@@ -83,40 +83,9 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
-    // devServer: {
-    //   // https: true
-    //   open: true // opens browser window automatically
-    // },
     devServer: {
-      proxy: {
-        // string shorthand
-        '/foo': 'http://localhost:4567',
-        // with options
-        '/api': {
-          target: 'http://jsonplaceholder.typicode.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
-        },
-        // with RegEx
-        '^/fallback/.*': {
-          target: 'http://jsonplaceholder.typicode.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/fallback/, '')
-        },
-        // Using the proxy instance
-        '/api': {
-          target: 'http://jsonplaceholder.typicode.com',
-          changeOrigin: true,
-          configure: (proxy, options) => {
-            // proxy will be an instance of 'http-proxy'
-          }
-        },
-        // Proxying websockets or socket.io
-        '/socket.io': {
-          target: 'ws://localhost:3000',
-          ws: true
-        }
-      }
+      // https: true
+      open: true // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

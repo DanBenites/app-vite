@@ -1,6 +1,6 @@
 <template>
-<q-page>
-  <q-card id='dias'>
+
+  <q-card>
        <q-item clickable>
           <q-item-section avatar>
             <q-img :src="atual.icon"/>
@@ -8,34 +8,33 @@
 
           <q-item-section>
             <q-item-label> Hoje • {{ atual.descricao}}</q-item-label>
-          </q-item-section>
-        <q-item-section side>↑ {{ teste[0].tempMax }}°C </q-item-section>
+          </q-item-section >
+          <q-item-section side><span v-if="TomorrowAndAfter[0]">  ↑ {{ TomorrowAndAfter[0].maior }}°C / {{TomorrowAndAfter[0].menor}}↓°C </span></q-item-section>
         </q-item>
 
-        <!--
         <q-item clickable>
-          <q-item-section avatar>
-            <q-img :src="atual.icon"/>
+          <q-item-section avatar v-if="TomorrowAndAfter[1]">
+            <q-img :src="TomorrowAndAfter[1].icon"/>
           </q-item-section>
 
           <q-item-section>
             <q-item-label> Amanhã • </q-item-label>
           </q-item-section>
-          <q-item-section side v-> ↑{{ days[1].temp_max}}°C / {{ days[1].temp_min}}↓°C</q-item-section>
+          <q-item-section side><span v-if="TomorrowAndAfter[1]">  ↑{{ TomorrowAndAfter[1].maior}}°C / {{ TomorrowAndAfter[1].menor}}↓°C</span></q-item-section>
         </q-item>
 
         <q-item clickable>
-          <q-item-section avatar>
-            <q-img :src="atual.icon"/>
+          <q-item-section avatar v-if="TomorrowAndAfter[2]">
+            <q-img :src="TomorrowAndAfter[2].icon"/>
           </q-item-section>
 
           <q-item-section>
             <q-item-label> Depois de Amanhã • </q-item-label>
           </q-item-section>
-          <q-item-section side> ↑{{ days[2].temp_max}}°C / ↓{{ days[2].temp_min}}°C </q-item-section>
-        </q-item> -->
+          <q-item-section side><span v-if="TomorrowAndAfter[2]">  ↑{{ TomorrowAndAfter[2].maior}}°C / ↓{{ TomorrowAndAfter[2].menor}}°C </span></q-item-section>
+        </q-item>
     </q-card>
-</q-page>
+
 </template>
 
 <script>
@@ -43,10 +42,9 @@ import { toRaw } from 'vue'
 import axios from 'axios'
 
 export default {
-  el: '#dias',
   data () {
     return {
-      teste: '',
+      TomorrowAndAfter: '',
       lista: [],
       dados: [],
       atual: {
@@ -55,10 +53,6 @@ export default {
         tempMin: '',
         icon: '',
         descricao: ''
-      },
-      tomorrow: {
-        temp_max: '',
-        temp_min: ''
       },
       days: []
     }
@@ -95,10 +89,15 @@ export default {
         for (const i in this.dados.list) {
           maior = Math.max(maior, this.dados.list[i].main.temp_max)
           menor = Math.min(menor, this.dados.list[i].main.temp_min)
+
           if (this.dados.list[i].dt_txt.match(/00:00:00/)) {
+            const j = Number(i) + 4
+            const x = this.dados.list[j].weather[0].icon
+            const icon = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${x}.png`
             this.days.push({
-              tempMax: maior,
-              tempMin: menor
+              maior,
+              menor,
+              icon
             })
             cont = cont + 1
             maior = -200
@@ -106,7 +105,7 @@ export default {
           }
         }
       })
-      this.teste = toRaw(this.days)
+      this.TomorrowAndAfter = toRaw(this.days)
     }
   }
 }

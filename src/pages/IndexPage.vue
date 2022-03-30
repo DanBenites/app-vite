@@ -14,46 +14,10 @@
     </q-card>
     <br>
     <card-tree-days/>
-    <!--
-    <q-card>
-       <q-item clickable>
-          <q-item-section avatar>
-            <q-img :src="urlIcon[0]"/>
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label> Today • {{ atual.descricao}}</q-item-label>
-          </q-item-section>
-          <q-item-section side> ↑{{atual.max}}°K / ↓{{ atual.min }}°K </q-item-section>
-        </q-item>
-
-        <q-item clickable>
-          <q-item-section avatar>
-            <q-img :src="urlIcon[1]"/>
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label> Tomorrow • {{ dataWeather.description[1]}}</q-item-label>
-          </q-item-section>
-          <q-item-section side> ↑{{allTemps.max[1]}}°K / ↓{{ allTemps.min[1]}}°K </q-item-section>
-        </q-item>
-
-        <q-item clickable>
-          <q-item-section avatar>
-            <q-img :src="urlIcon[2]"/>
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label> After Tomorrow • {{ dataWeather.description[2]}}</q-item-label>
-          </q-item-section>
-          <q-item-section side> ↑{{allTemps.max[2]}}°K / ↓{{ allTemps.min[2]}}°K </q-item-section>
-        </q-item>
-    </q-card>
     <br>
-    <div>
-      <table-scroll-virtual/>
-      <card-datas-main/>
-    </div> -->
+    <table-scroll-virtual/>
+    <br>
+    <card-datas-main/>
   </q-page>
 </template>
 
@@ -62,9 +26,9 @@
 import { defineComponent } from 'vue'
 import axios from 'axios'
 import CardTreeDays from './CardTreeDays.vue'
-// import CardDatasMain from './CardDatasMain.vue'
+import CardDatasMain from './CardDatasMain.vue'
 
-// import TableScrollVirtual from './TableScrollVirtual.vue'
+import TableScrollVirtual from './TableScrollVirtual.vue'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -85,9 +49,9 @@ export default defineComponent({
     }
   },
   components: {
-    CardTreeDays
-    // TableScrollVirtual,
-    // CardDatasMain
+    CardTreeDays,
+    TableScrollVirtual,
+    CardDatasMain
   },
   mounted () {
     this.getApiRealTime()

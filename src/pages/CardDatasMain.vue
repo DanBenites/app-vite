@@ -9,16 +9,16 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{main.cloudsName}}</q-item-label>
+          <q-item-label> Nebulosidade </q-item-label>
           <q-item-label caption>
-            {{main.clouds}}%
+            {{main.cloudsName}}: {{main.clouds}}%
           </q-item-label>
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>Snows</q-item-label>
+          <q-item-label> Condição</q-item-label>
           <q-item-label caption>
-            Subhead
+            {{ main.description }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -29,7 +29,7 @@
         <q-card-section>
 
           <q-item-section>
-            <q-item-label>Pressure</q-item-label>
+            <q-item-label>Pressão Atms.</q-item-label>
               <q-item-label caption>
                 {{main.press}}mbar
               </q-item-label>
@@ -38,7 +38,7 @@
             <br>
 
             <q-item-section>
-            <q-item-label>Humidity </q-item-label>
+            <q-item-label>Humidade </q-item-label>
               <q-item-label caption>
                 {{main.humidity}}%
               </q-item-label>
@@ -51,14 +51,14 @@
         <q-card-section class="col-4">
 
           <q-item-section>
-            <q-item-label>Feels Like</q-item-label>
+            <q-item-label>Sensação</q-item-label>
               <q-item-label caption>
-                {{main.Feels}}°K
+                {{main.feels}}°C
               </q-item-label>
           </q-item-section>
           <br>
           <q-item-section>
-            <q-item-label>Wind Speed </q-item-label>
+            <q-item-label>Vel. do Vento</q-item-label>
               <q-item-label caption>
                 {{main.vent}}m/s
               </q-item-label>
@@ -79,31 +79,35 @@ export default {
         cloudsName: '',
         press: '',
         humidity: '',
-        Feels: 0,
-        vent: 0
+        feels: 0,
+        vent: 0,
+        weather: '',
+        description: ''
       }
     }
   },
   mounted () {
-    this.getList()
+    this.getAllDatas()
   },
   methods: {
-    getList () {
-      this.$api.get('/list.json')
+    getAllDatas () {
+      this.$api.get('https://api.openweathermap.org/data/2.5/weather?q=Dourados&units=metric&lang=pt_br&appid=a4c7ce7d14ee7e65f0c6fc1e3a53b703')
         .then((res) => {
           const lista = res.data
 
-          this.main.press = lista[0].main.pressure
-          this.main.humidity = lista[0].main.humidity
-          this.main.vent = lista[0].wind.speed
+          this.main.press = lista.main.pressure
+          this.main.humidity = lista.main.humidity
+          this.main.vent = lista.wind.speed
+          this.main.feels = lista.main.feels_like
+          this.main.weather = lista.weather[0].main
+          this.main.description = lista.weather[0].description
+          // const t = lista.main.temp
+          // const v = lista.wind.speed * 3.6
+          // const i = (33 + (10 * (Math.sqrt(v)) + 10.45 - v) * (t - 33) / 22)
+          // this.main.Feels = Math.ceil(i)
 
-          const t = lista[0].main.temp - 273
-          const v = lista[0].wind.speed * 3.6
-          const i = (33 + (10 * (Math.sqrt(v)) + 10.45 - v) * (t - 33) / 22) + 273
-          this.main.Feels = Math.ceil(i)
-
-          this.main.clouds = lista[0].clouds.all
-          if (this.main.clouds >= 90) { this.main.cloudsName = 'Obstructed Vision' } else if (this.main.clouds >= 80) { this.main.cloudsName = 'Cloundy' } else if (this.main.clouds >= 60) { this.main.cloudsName = 'Almost Cloudy' } else if (this.main.clouds >= 40) { this.main.cloudsName = 'Partly Cloudy' } else if (this.main.clouds >= 10) { this.main.cloudsName = 'almost Clean' } else { this.main.cloudsName = 'Clean' }
+          this.main.clouds = lista.clouds.all
+          if (this.main.clouds >= 90) { this.main.cloudsName = 'Visão Obstruida' } else if (this.main.clouds >= 80) { this.main.cloudsName = 'Céu Nublado' } else if (this.main.clouds >= 60) { this.main.cloudsName = 'Céu Quase Nublado' } else if (this.main.clouds >= 40) { this.main.cloudsName = 'Parcialmente Nublado' } else if (this.main.clouds >= 20) { this.main.cloudsName = 'Poucas Nuvens' } else if (this.main.clouds >= 10) { this.main.cloudsName = 'Céu Quase Limpo' } else { this.main.cloudsName = 'Céu Limpo' }
         })
         .catch((err) => { console.log(err) })
     }
